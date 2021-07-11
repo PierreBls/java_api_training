@@ -40,9 +40,9 @@ class LauncherTest {
                 "}"))
             .build();
 
-        HttpResponse response = client.send(requestPost, )
+        HttpResponse response = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
 
-        Assertions.assertEquals(400, requestPost.);
+        Assertions.assertEquals(202, response.statusCode());
     }
 
     @Test

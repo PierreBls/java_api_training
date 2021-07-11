@@ -55,12 +55,12 @@ public class Launcher {
 
     private static void CallApiHandler(HttpExchange exchange) throws IOException {
         String requestMethod = exchange.getRequestMethod();
-        String response = "";
+        String response;
         //Response to POST methode
         if (requestMethod.equalsIgnoreCase("POST")) {
             String body = get_body(exchange);
             //check if body are well format
-            if (body == "400"   )
+            if (body.equals("400"))
             {
                 response = "400 (Bad Request)";
                 exchange.sendResponseHeaders(202, response.length());//response code and length
@@ -78,7 +78,6 @@ public class Launcher {
     }
 
     private static String get_body(HttpExchange exchange) throws IOException {
-        try {
             InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
             BufferedReader br = new BufferedReader(isr);
             // From now on, the right way of moving from bytes to utf-8 characters:
@@ -98,10 +97,11 @@ public class Launcher {
             Gson gson = builder.create();
 
             Message body = gson.fromJson(buf.toString(), Message.class);
-            return body.toString();
-        } catch (IOException ioe) {
-            return "400";
-        }
 
+            if (body.getId() == null || body.getMessage() == null || body.getUrl() == null)
+            {
+                return "400";
+            }
+            return body.toString();
     }
 }
